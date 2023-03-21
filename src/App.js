@@ -5,9 +5,11 @@ import './App.css';
 import data from './data';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './routes/Detail';
+import axios from 'axios';
 
 function App() {
-  let [shoes] = useState(data);
+  let [shoes, setShoes] = useState(data);
+  let [show, setShow] = useState(false);
 
   // hook : 유용한 것들이 들어있는 함수
   // 페이지 이동을 도와주는 함수
@@ -50,6 +52,28 @@ function App() {
                   })}
                 </div>
               </div>
+
+              <button
+                onClick={() => {
+                  /* 로딩중 UI 띄우기 */
+                  axios
+                    .get('https://codingapple1.github.io/shop/data2.json')
+                    .then((result) => {
+                      let copy = [...shoes, ...result.data];
+                      setShoes(copy);
+                    })
+                    .catch(() => {
+                      console.log('실패');
+                    });
+
+                  // 여러 axios get 요청 완료 후에 코드 진행시에 다음과 같이 작성
+                  Promise.all([axios.get('/url1'), axios.get('/url2')]).then(
+                    () => {}
+                  );
+                }}
+              >
+                버튼
+              </button>
             </>
           }
         />
