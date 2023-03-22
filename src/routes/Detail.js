@@ -97,7 +97,7 @@ function Detail(props) {
           </Nav.Link>
         </Nav.Item>
       </Nav>
-      <TabContent tab={tab} />
+      <TabContent tab={tab} shoes={props.shoes} />
     </div>
   );
 }
@@ -107,7 +107,7 @@ function Detail(props) {
   팁1. props.어쩌구가 귀찮으면 {} 변수명 ex) {tab, tab2} 
   팁2. if 절 안쓰고 아래 처럼 해도 됨
 */
-function TabContent({ tab }) {
+function TabContent({ tab, shoes }) {
   let [fade, setFade] = useState('');
   useEffect(() => {
     //리액트의 automatic batching 기능 : state 변경함수마다 재렌더링이 아니라 한번에 렌더링
@@ -121,7 +121,7 @@ function TabContent({ tab }) {
   // 탭 state가 변할 때 end 부착
   return (
     <div className={`start ${fade}`}>
-      [<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tab];
+      [<div>{shoes[0].title}</div>, <div>내용1</div>, <div>내용2</div>][tab];
     </div>
   );
 }

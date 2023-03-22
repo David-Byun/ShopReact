@@ -6,6 +6,8 @@ import data from './data';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './routes/Detail';
 import axios from 'axios';
+import Cart from './routes/Cart';
+import { useQuery } from 'react-query';
 
 function App() {
   let [shoes, setShoes] = useState(data);
@@ -14,6 +16,25 @@ function App() {
   // hook : 유용한 것들이 들어있는 함수
   // 페이지 이동을 도와주는 함수
   let navigate = useNavigate();
+
+  /* 
+    장점 1 : 성공, 실패, 로딩 중 쉽게 파악 가능 
+    result.data;
+    result.isLoading
+    result.error
+
+    장점 2 : 틈만나면 자동으로 재요청해줌
+    장점 3 : retry 해줌
+    장점 4 : state 공유 안해도 됩니다
+  */
+  let result = useQuery('작명', () => {
+    return (
+      axios.get('https://codingapple1.github.io/userdata.json').then((a) => {
+        return a.data;
+      }),
+      { staleTime: 2000 }
+    );
+  });
 
   return (
     <div className="App">
@@ -35,6 +56,11 @@ function App() {
             >
               Detail
             </Nav.Link>
+          </Nav>
+          <Nav className="ms-auto">
+            {result.isLoading && '로딩중'}
+            {result.error && '에러남'}
+            {result.data && result.data.name}
           </Nav>
         </Container>
       </Navbar>
@@ -78,13 +104,7 @@ function App() {
           }
         />
         <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
-
-        <Route path="/about" element={<About />}>
-          <Route path="member" element={<div>멤버임</div>} />
-          <Route path="location" element={<About />} />
-        </Route>
-
-        <Route path="*" element={<div>없는 페이지에요!</div>} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
     </div>
   );
